@@ -19,19 +19,21 @@ export const LoginPage = () => {
       password
     }).then(response => {
       dispatch(setTokens(response.data))
-      navigate("/match", {replace: true})
-      window.location.reload()
+      setTimeout(() => {
+        navigate("/match", {replace: true});
+      }, 100);
     })
   }
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex flex-1 flex-col justify-center px-6 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
-            className="mx-auto h-12 w-auto"
+            className="mx-auto h-8 w-auto cursor-pointer"
             src="/hearts.svg"
             alt="Your Company"
+            onClick={() => navigate("/", {replace: true})}
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
@@ -94,7 +96,8 @@ export const LoginPage = () => {
             </div>
 
           </form>
-          <div onClick={() => navigate("/registration", {replace: true})} className="flex justify-center pt-1 font-semibold text-red-600 hover:text-red-500 cursor-pointer w-max">
+          <div onClick={() => navigate("/registration", {replace: true})}
+               className="flex justify-center pt-1 font-semibold text-red-600 hover:text-red-500 cursor-pointer w-max">
             Create an account
           </div>
         </div>

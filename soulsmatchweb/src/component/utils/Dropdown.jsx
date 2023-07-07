@@ -1,25 +1,30 @@
 import React, {useState} from "react";
 
-export const Dropdown = ({description, options, onSelect}) => {
+export const Dropdown = ({description, options, onSelect, disabled}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    if (!disabled) {
+      setIsOpen(!isOpen);
+    }
   };
 
   const handleSelectOption = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
-    onSelect(option)
+    onSelect(option);
   };
 
   return (
     <div className="relative">
       <button
         type="button"
-        className="flex items-center justify-between w-32 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
+        className={`flex items-center justify-between w-32 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 ${
+          disabled ? "opacity-50 cursor-not-allowed" : ""
+        }`}
         onClick={handleToggle}
+        disabled={disabled}
       >
         {selectedOption ? (
           <span>{options.find((opt) => opt === selectedOption)}</span>
@@ -50,6 +55,7 @@ export const Dropdown = ({description, options, onSelect}) => {
               type="button"
               className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
               onClick={() => handleSelectOption(option)}
+              disabled={disabled}
             >
               {option}
             </button>

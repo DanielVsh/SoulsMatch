@@ -1,9 +1,10 @@
 import axios from "axios";
 import {Mutex} from "async-mutex";
 import {soulsmatch} from "../config/soulsmatch";
-import {store} from "../app/store";
-import {logout} from "./logout";
 import {fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+// import {store} from "../app/store";
+import {clearTokens, setTokens} from "../service/authSlice";
+import {clearProfileReducer} from "../service/profileSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${soulsmatch}/api/v1`,
@@ -25,17 +26,24 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {
-        await axios.post(`${soulsmatch}/api/v1/auth/refresh-token`, {},{
+        await axios.post(`${soulsmatch}/api/v1/auth/refresh-token`, {}, {
           headers: {
-            "Authorization": `Bearer ${store?.getState()?.authReducer?.tokens?.refreshToken}`
+            "Authorization": `Bearer ${api?.getState()?.authReducer?.tokens?.refreshToken}`
           }
         }).then((response) => {
-          store.getState().authReducer.tokens = response?.data
+          api.dispatch(setTokens(response?.data))
           result = baseQuery(args, api, extraOptions)
         }).catch(reason => {
-          logout()
-          window.location.href = "/login";
-          alert("Your token has expired");
+          axios.post(`${soulsmatch}/api/v1/auth/logout`, {}, {
+            headers: {
+              "Authorization": `Bearer ${api?.getState()?.authReducer?.tokens?.accessToken}`
+            }
+          }).then(() => {
+            window.location.href = "/login"
+            alert("Your token has expired");
+          })
+          api.dispatch(clearTokens())
+          api.dispatch(clearProfileReducer())
         })
       } finally {
         release()

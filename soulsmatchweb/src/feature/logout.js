@@ -12,6 +12,7 @@ export const logout = () => {
   }).then(() => {
     window.location.href = "/login"
   })
+
   store.dispatch(clearTokens())
   store.dispatch(clearProfileReducer())
   persistor.purge()
