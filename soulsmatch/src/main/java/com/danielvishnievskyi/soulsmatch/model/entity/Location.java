@@ -16,12 +16,12 @@ public class Location {
   @Column(name = "id", nullable = false)
   private Long id;
 
-  @Column(name = "name")
+  @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "latitude")
+  @Column(name = "latitude", nullable = false)
   private double latitude;
 
-  @Column(name = "longitude")
+  @Column(name = "longitude", nullable = false)
   private double longitude;
 }
