@@ -1,6 +1,6 @@
 package com.danielvishnievskyi.soulsmatch.service.auth;
 
-import com.danielvishnievskyi.soulsmatch.mapper.SoulMapperService;
+import com.danielvishnievskyi.soulsmatch.mapper.soul.SoulMapperServiceImpl;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.AuthenticationRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.RegisterRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.AuthenticationResponseDto;
@@ -8,16 +8,14 @@ import com.danielvishnievskyi.soulsmatch.model.entity.Soul;
 import com.danielvishnievskyi.soulsmatch.model.enums.Role;
 import com.danielvishnievskyi.soulsmatch.repository.SoulRepository;
 import com.danielvishnievskyi.soulsmatch.security.jwt.JwtUtils;
-import com.danielvishnievskyi.soulsmatch.util.AuthenticationServiceUtil;
+import com.danielvishnievskyi.soulsmatch.util.auth.AuthenticationServiceUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,13 +30,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final JwtUtils jwtUtils;
   private final AuthenticationManager authenticationManager;
   private final AuthenticationServiceUtil authenticationServiceUtil;
-  private final SoulMapperService soulMapperService;
+  private final SoulMapperServiceImpl soulMapperService;
 
   @Override
   public AuthenticationResponseDto register(RegisterRequestDto requestDto) {
     Soul soul = Soul.builder()
       .email(requestDto.username())
-      .password(soulMapperService.passwordToBCrypt(requestDto.password()))
+      .password(soulMapperService.mapPasswordToBCrypt(requestDto.password()))
       .firstName(requestDto.firstName())
       .lastName(requestDto.lastName())
       .birthDate(soulMapperService.mapStringToLocalDate(requestDto.birthDate()))
