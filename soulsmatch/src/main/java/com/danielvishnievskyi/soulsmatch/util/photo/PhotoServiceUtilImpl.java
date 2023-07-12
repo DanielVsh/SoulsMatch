@@ -1,4 +1,4 @@
-package com.danielvishnievskyi.soulsmatch.component.photo;
+package com.danielvishnievskyi.soulsmatch.util.photo;
 
 import com.danielvishnievskyi.soulsmatch.model.entity.Photo;
 import com.danielvishnievskyi.soulsmatch.repository.PhotoRepository;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PhotoComponentImpl implements PhotoComponent{
+public class PhotoServiceUtilImpl implements PhotoServiceUtil {
 
   private final PhotoRepository photoRepository;
 

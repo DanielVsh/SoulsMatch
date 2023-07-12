@@ -23,19 +23,28 @@ public class Profile {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "soul", nullable = false, unique = true)
+  @JoinColumn(name = "soul_id", nullable = false, unique = true)
   private Soul soul;
 
   @Column(name = "description")
   private String description;
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany(fetch = EAGER)
   @CollectionTable(name = "photo_profile", joinColumns = @JoinColumn(name = "profile_id"))
   @ToString.Exclude
   private List<Photo> photos;
 
+  @ManyToOne(fetch = EAGER)
+  @JoinColumn(name = "location_id")
+  private Location location;
+
   @ElementCollection(fetch = EAGER)
-  @CollectionTable(name = "profile_preferred_genders", joinColumns = @JoinColumn(name = "profile_id"))
+  @CollectionTable(
+    name = "profile_preferred_genders",
+    joinColumns = @JoinColumn(name = "profile_id", nullable = false)
+  )
   @Enumerated(EnumType.STRING)
   private List<Gender> preferredGenders;
+
+
 }

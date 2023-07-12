@@ -1,4 +1,4 @@
-package com.danielvishnievskyi.soulsmatch.component.swipe;
+package com.danielvishnievskyi.soulsmatch.util.swipe;
 
 import com.danielvishnievskyi.soulsmatch.model.entity.Soul;
 import com.danielvishnievskyi.soulsmatch.model.entity.Swipe;
@@ -8,12 +8,11 @@ import com.danielvishnievskyi.soulsmatch.repository.SwipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class SwipeComponentImpl implements SwipeComponent {
+public class SwipeServiceUtilImpl implements SwipeServiceUtil {
   private final SwipeRepository swipeRepository;
   private final SoulRepository soulRepository;
   private final ProfileRepository profileRepository;

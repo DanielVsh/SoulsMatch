@@ -50,7 +50,7 @@ public class Soul implements UserDetails {
   private LocalDate birthDate;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "location")
+  @JoinColumn(name = "location_id")
   private Location location;
 
   @OneToMany(fetch = FetchType.EAGER)

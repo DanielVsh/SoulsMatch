@@ -1,21 +1,21 @@
 package com.danielvishnievskyi.soulsmatch.service.profile;
 
-import com.danielvishnievskyi.soulsmatch.component.swipe.SwipeComponent;
-import com.danielvishnievskyi.soulsmatch.mapper.ProfileMapperService;
+import com.danielvishnievskyi.soulsmatch.mapper.profile.ProfileMapperServiceImpl;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.ProfileRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.ProfileResponseDto;
 import com.danielvishnievskyi.soulsmatch.model.entity.Profile;
-import com.danielvishnievskyi.soulsmatch.model.entity.Swipe;
 import com.danielvishnievskyi.soulsmatch.repository.ProfileRepository;
+import com.danielvishnievskyi.soulsmatch.repository.specification.LikeSpecification;
 import com.danielvishnievskyi.soulsmatch.repository.specification.ProfileSpecification;
+import com.danielvishnievskyi.soulsmatch.util.like.LikeServiceUtil;
+import com.danielvishnievskyi.soulsmatch.util.swipe.SwipeServiceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,19 +23,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
   private final ProfileRepository profileRepository;
-  private final ProfileMapperService profileMapperService;
-  private final SwipeComponent swipeComponent;
+  private final ProfileMapperServiceImpl profileMapperService;
+  private final SwipeServiceUtil swipeServiceUtil;
+  private final LikeServiceUtil likeServiceUtil;
 
   @Override
   public List<ProfileResponseDto> getNextProfiles(String username) {
     Profile swiperProfile = profileRepository.findBySoulEmail(username).orElseThrow(); //TODO: custom exception
 
     Specification<Profile> specification = Specification.where(ProfileSpecification.withNotSwipedProfiles(username))
-      .and(ProfileSpecification.withCountry(swiperProfile.getSoul().getLocation().getCountry().getName()))
       .and(ProfileSpecification.withPreferredGenders(swiperProfile.getPreferredGenders()))
       .and(ProfileSpecification.withDistance(
-        swiperProfile.getSoul().getLocation().getLatitude(),
-        swiperProfile.getSoul().getLocation().getLongitude())
+        swiperProfile.getLocation().getLatitude(),
+        swiperProfile.getLocation().getLongitude())
       );
 
     return profileRepository.findAll(specification, PageRequest.of(0, 10)).stream()
@@ -44,14 +44,24 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
+  public Page<ProfileResponseDto> getRequestedLikesProfiles(String username, Pageable pageable) {
+    Profile profile = profileRepository.findBySoulEmail(username).orElseThrow();//TODO: custom exception
+    Specification<Profile> spec = LikeSpecification.findRequestedProfilesByLikedSoulUsername(username)
+      .and(ProfileSpecification.withDistance(profile.getLocation().getLatitude(),
+        profile.getLocation().getLongitude()));
+
+    return profileRepository.findAll(spec, pageable).map(profileMapperService::entityToResponseDto);
+  }
+
+  @Override
   public void dislikeProfile(String username, Long goalProfileId) {
-    swipeComponent.updateSwipedProfilesBySoul(username, goalProfileId);
+    swipeServiceUtil.updateSwipedProfilesBySoul(username, goalProfileId);
   }
 
   @Override
   public void likeProfile(String username, Long goalProfileId) {
-    //TODO: like system
-    swipeComponent.updateSwipedProfilesBySoul(username, goalProfileId);
+    likeServiceUtil.likeProfile(username, goalProfileId);
+    swipeServiceUtil.updateSwipedProfilesBySoul(username, goalProfileId);
   }
 
   @Override

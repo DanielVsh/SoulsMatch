@@ -3,7 +3,6 @@ package com.danielvishnievskyi.soulsmatch.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,7 +19,7 @@ public class Swipe {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "soul", nullable = false, unique = true)
+  @JoinColumn(name = "soul_id", nullable = false, unique = true)
   private Soul soul;
 
   @ManyToMany(fetch = FetchType.EAGER)
