@@ -1,11 +1,13 @@
 package com.danielvishnievskyi.soulsmatch.controller;
 
-import com.danielvishnievskyi.soulsmatch.mapper.ProfileMapperService;
+import com.danielvishnievskyi.soulsmatch.mapper.profile.ProfileMapperServiceImpl;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.ProfileRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.ProfileResponseDto;
 import com.danielvishnievskyi.soulsmatch.repository.ProfileRepository;
 import com.danielvishnievskyi.soulsmatch.service.profile.ProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,9 @@ public class ProfileController {
 
   private final ProfileService profileService;
   private final ProfileRepository profileRepository;
-  private final ProfileMapperService profileMapperService;
+  private final ProfileMapperServiceImpl profileMapperService;
 
-  @GetMapping("/next") //TODO: pageable list of profiles
+  @GetMapping("/next")
   public ResponseEntity<List<ProfileResponseDto>> getNextProfiles(Principal principal) {
     return ResponseEntity.ok(profileService.getNextProfiles(principal.getName()));
   }
@@ -31,6 +33,11 @@ public class ProfileController {
   @GetMapping()
   public ResponseEntity<ProfileResponseDto> getProfile(Principal principal) {
     return ResponseEntity.ok(profileMapperService.entityToResponseDto(profileRepository.findBySoulEmail(principal.getName()).orElseThrow()));
+  }
+
+  @GetMapping("/liked")
+  public ResponseEntity<Page<ProfileResponseDto>> getLikedProfiles(Principal principal) {
+    return ResponseEntity.ok(profileService.getRequestedLikesProfiles(principal.getName(), PageRequest.of(0, 10)));
   }
 
   @PatchMapping("/{profileId}/dislike")
