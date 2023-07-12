@@ -1,4 +1,4 @@
-package com.danielvishnievskyi.soulsmatch.mapper;
+package com.danielvishnievskyi.soulsmatch.mapper.photo;
 
 import com.danielvishnievskyi.soulsmatch.model.dto.request.PhotoRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.PhotoResponseDto;
@@ -12,7 +12,7 @@ import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 @Mapper(componentModel = SPRING)
-public abstract class PhotoMapperService implements MapperService<Photo, PhotoRequestDto, PhotoResponseDto>{
+public abstract class PhotoMapperServiceImpl implements PhotoMapperService {
 
   @Override
   public abstract Photo requestDtoToEntity(PhotoRequestDto photoRequestDto);
