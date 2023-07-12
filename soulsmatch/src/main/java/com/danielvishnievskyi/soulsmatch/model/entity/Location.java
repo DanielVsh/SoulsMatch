@@ -16,25 +16,12 @@ public class Location {
   @Column(name = "id", nullable = false)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "country", nullable = false)
-  private Country country;
+  @Column(name = "name")
+  private String name;
 
-  @ManyToOne
-  @JoinColumn(name = "city", nullable = false)
-  private City city;
-
-  @Column(name = "latitude", nullable = false)
+  @Column(name = "latitude")
   private double latitude;
 
-  @Column(name = "longitude", nullable = false)
+  @Column(name = "longitude")
   private double longitude;
-
-  public Location(Long id, Country country, City city) {
-    this.id = id;
-    this.country = country;
-    this.city = city;
-    this.latitude = city.getLatitude();
-    this.longitude = city.getLongitude();
-  }
 }
