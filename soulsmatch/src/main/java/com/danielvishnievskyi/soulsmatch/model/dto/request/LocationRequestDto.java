@@ -1,8 +1,8 @@
 package com.danielvishnievskyi.soulsmatch.model.dto.request;
 
+
 public record LocationRequestDto(
-  Long country,
-  Long city,
+  String name,
   double latitude,
   double longitude
 ) {

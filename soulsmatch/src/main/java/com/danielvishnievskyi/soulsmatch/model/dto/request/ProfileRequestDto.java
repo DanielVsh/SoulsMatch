@@ -7,6 +7,7 @@ import java.util.List;
 public record ProfileRequestDto(
   String description,
   List<String> photos,
-  List<Gender> preferredGenders
+  List<Gender> preferredGenders,
+  LocationRequestDto location
 ) {
 }

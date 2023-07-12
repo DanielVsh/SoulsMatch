@@ -10,6 +10,7 @@ public record ProfileResponseDto(
   Long id,
   SoulResponseDto soul,
   String description,
+  LocationResponseDto location,
   @Enumerated(EnumType.STRING) List<Gender> preferredGenders,
   List<PhotoResponseDto> photos
 ) {

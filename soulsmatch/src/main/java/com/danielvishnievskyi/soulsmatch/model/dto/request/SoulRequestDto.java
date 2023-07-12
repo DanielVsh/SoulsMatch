@@ -11,7 +11,7 @@ public record SoulRequestDto(
   String lastName,
   Gender gender,
   String birthDate,
-  Long location,
+  LocationRequestDto location,
   List<String> photos
 ) {
 }
