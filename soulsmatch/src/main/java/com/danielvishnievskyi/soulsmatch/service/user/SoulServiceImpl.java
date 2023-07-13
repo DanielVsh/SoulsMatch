@@ -1,6 +1,6 @@
 package com.danielvishnievskyi.soulsmatch.service.user;
 
-import com.danielvishnievskyi.soulsmatch.mapper.soul.SoulMapperServiceImpl;
+import com.danielvishnievskyi.soulsmatch.mapper.soul.SoulMapperService;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.SoulRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.SoulResponseDto;
 import com.danielvishnievskyi.soulsmatch.model.entity.Soul;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class SoulServiceImpl implements SoulService {
 
   private final SoulRepository soulRepository;
-  private final SoulMapperServiceImpl soulMapperService;
+  private final SoulMapperService soulMapperService;
 
 
   @Override

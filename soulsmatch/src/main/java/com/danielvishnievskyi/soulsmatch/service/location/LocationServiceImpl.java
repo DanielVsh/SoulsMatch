@@ -1,6 +1,6 @@
 package com.danielvishnievskyi.soulsmatch.service.location;
 
-import com.danielvishnievskyi.soulsmatch.mapper.location.LocationMapperServiceImpl;
+import com.danielvishnievskyi.soulsmatch.mapper.location.LocationMapperService;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.LocationRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.LocationResponseDto;
 import com.danielvishnievskyi.soulsmatch.model.entity.Location;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LocationServiceImpl implements LocationService{
+public class LocationServiceImpl implements LocationService {
   private final LocationRepository locationRepository;
-  private final LocationMapperServiceImpl locationMapperService;
+  private final LocationMapperService locationMapperService;
 
   @Override
   public LocationResponseDto getEntityById(Long id) {

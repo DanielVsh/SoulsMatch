@@ -1,6 +1,6 @@
 package com.danielvishnievskyi.soulsmatch.service.profile;
 
-import com.danielvishnievskyi.soulsmatch.mapper.profile.ProfileMapperServiceImpl;
+import com.danielvishnievskyi.soulsmatch.mapper.profile.ProfileMapperService;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.ProfileRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.ProfileResponseDto;
 import com.danielvishnievskyi.soulsmatch.model.entity.Profile;
@@ -16,19 +16,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
   private final ProfileRepository profileRepository;
-  private final ProfileMapperServiceImpl profileMapperService;
+  private final ProfileMapperService profileMapperService;
   private final SwipeServiceUtil swipeServiceUtil;
   private final LikeServiceUtil likeServiceUtil;
 
   @Override
-  public List<ProfileResponseDto> getNextProfiles(String username) {
+  public Page<ProfileResponseDto> getNextProfiles(String username) {
     Profile swiperProfile = profileRepository.findBySoulEmail(username).orElseThrow(); //TODO: custom exception
 
     Specification<Profile> specification = Specification.where(ProfileSpecification.withNotSwipedProfiles(username))
@@ -38,19 +35,21 @@ public class ProfileServiceImpl implements ProfileService {
         swiperProfile.getLocation().getLongitude())
       );
 
-    return profileRepository.findAll(specification, PageRequest.of(0, 10)).stream()
-      .map(profileMapperService::entityToResponseDto)
-      .collect(Collectors.toList());
+    return profileRepository.findAll(specification, PageRequest.of(0, 10))
+      .map(profileMapperService::entityToResponseDto);
   }
 
   @Override
   public Page<ProfileResponseDto> getRequestedLikesProfiles(String username, Pageable pageable) {
     Profile profile = profileRepository.findBySoulEmail(username).orElseThrow();//TODO: custom exception
     Specification<Profile> spec = LikeSpecification.findRequestedProfilesByLikedSoulUsername(username)
-      .and(ProfileSpecification.withDistance(profile.getLocation().getLatitude(),
-        profile.getLocation().getLongitude()));
+      .and(ProfileSpecification.withDistance(
+        profile.getLocation().getLatitude(),
+        profile.getLocation().getLongitude())
+      );
 
-    return profileRepository.findAll(spec, pageable).map(profileMapperService::entityToResponseDto);
+    return profileRepository.findAll(spec, pageable)
+      .map(profileMapperService::entityToResponseDto);
   }
 
   @Override

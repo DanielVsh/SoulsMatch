@@ -1,6 +1,6 @@
 package com.danielvishnievskyi.soulsmatch.service.photo;
 
-import com.danielvishnievskyi.soulsmatch.mapper.photo.PhotoMapperServiceImpl;
+import com.danielvishnievskyi.soulsmatch.mapper.photo.PhotoMapperService;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.PhotoRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.PhotoResponseDto;
 import com.danielvishnievskyi.soulsmatch.model.entity.Photo;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PhotoServiceImpl implements PhotoService{
+public class PhotoServiceImpl implements PhotoService {
   private final PhotoRepository photoRepository;
-  private final PhotoMapperServiceImpl photoMapperService;
+  private final PhotoMapperService photoMapperService;
 
   @Override
   public PhotoResponseDto getEntityById(Long id) {

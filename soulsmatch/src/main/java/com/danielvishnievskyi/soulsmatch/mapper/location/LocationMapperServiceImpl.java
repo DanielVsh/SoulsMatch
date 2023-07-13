@@ -1,6 +1,5 @@
 package com.danielvishnievskyi.soulsmatch.mapper.location;
 
-import com.danielvishnievskyi.soulsmatch.mapper.MapperService;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.LocationRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.LocationResponseDto;
 import com.danielvishnievskyi.soulsmatch.model.entity.Location;
@@ -13,7 +12,7 @@ import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 @Mapper(componentModel = SPRING)
-public abstract class LocationMapperServiceImpl implements MapperService<Location, LocationRequestDto, LocationResponseDto> {
+public abstract class LocationMapperServiceImpl implements LocationMapperService {
 
   @Override
   public abstract Location requestDtoToEntity(LocationRequestDto locationRequestDto);

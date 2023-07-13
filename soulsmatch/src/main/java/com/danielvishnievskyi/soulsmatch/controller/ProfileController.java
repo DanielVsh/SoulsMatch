@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/profiles")
@@ -26,7 +25,7 @@ public class ProfileController {
   private final ProfileMapperServiceImpl profileMapperService;
 
   @GetMapping("/next")
-  public ResponseEntity<List<ProfileResponseDto>> getNextProfiles(Principal principal) {
+  public ResponseEntity<Page<ProfileResponseDto>> getNextProfiles(Principal principal) {
     return ResponseEntity.ok(profileService.getNextProfiles(principal.getName()));
   }
 
