@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface MessageService {
   MessageResponseDto createMessage(MessageRequestDto messageRequestDto);
+  MessageResponseDto updateMessage(Long messageId, MessageRequestDto messageRequestDto);
   void deleteMessage(Long id);
   Page<MessageResponseDto> getPageableMessagesByChatId(Long chatId, Pageable pageable);
 }

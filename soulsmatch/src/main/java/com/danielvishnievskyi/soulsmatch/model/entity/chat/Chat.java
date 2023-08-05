@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "chat")
@@ -15,9 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Chat {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "id", nullable = false)
-  private Long id;
+  private UUID id;
 
   @ManyToMany
   @JoinTable(

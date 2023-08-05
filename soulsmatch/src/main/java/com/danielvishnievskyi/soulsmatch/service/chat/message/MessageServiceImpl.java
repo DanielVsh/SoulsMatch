@@ -1,7 +1,6 @@
 package com.danielvishnievskyi.soulsmatch.service.chat.message;
 
 import com.danielvishnievskyi.soulsmatch.mapper.chat.message.MessageMapperService;
-import com.danielvishnievskyi.soulsmatch.mapper.chat.message.MessageMapperServiceImpl;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.MessageRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.MessageResponseDto;
 import com.danielvishnievskyi.soulsmatch.model.entity.chat.Message;
@@ -18,12 +17,19 @@ import java.time.LocalDateTime;
 public class MessageServiceImpl implements MessageService {
   private final MessageRepository messageRepository;
   private final MessageMapperService messageMapperService;
-  private final MessageMapperServiceImpl messageMapperServiceImpl;
 
   @Override
   public MessageResponseDto createMessage(MessageRequestDto messageRequestDto) {
     Message message = messageMapperService.requestDtoToEntity(messageRequestDto);
     message.setTime(LocalDateTime.now());
+    message.setRead(false);
+    return messageMapperService.entityToResponseDto(messageRepository.save(message));
+  }
+
+  @Override
+  public MessageResponseDto updateMessage(Long id, MessageRequestDto messageRequestDto) {
+    Message message = messageRepository.findById(id).orElseThrow(); //TODO: custom exception
+    messageMapperService.updateEntityByRequestDto(messageRequestDto, message);
     return messageMapperService.entityToResponseDto(messageRepository.save(message));
   }
 
@@ -35,6 +41,6 @@ public class MessageServiceImpl implements MessageService {
   @Override
   public Page<MessageResponseDto> getPageableMessagesByChatId(Long chatId, Pageable pageable) {
     return messageRepository.findAllByChatId(chatId, pageable)
-      .map(messageMapperServiceImpl::entityToResponseDto);
+      .map(messageMapperService::entityToResponseDto);
   }
 }

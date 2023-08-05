@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "message")
@@ -16,12 +17,12 @@ import java.time.LocalDateTime;
 @ToString
 public class Message {
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  @Column(name = "id", nullable = false)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "uuid", nullable = false)
+  private UUID uuid;
 
   @ManyToOne
-  @JoinColumn(name = "chat_id",  nullable = false)
+  @JoinColumn(name = "chat_id", nullable = false)
   private Chat chat;
 
   @ManyToOne
@@ -30,6 +31,9 @@ public class Message {
 
   @Column(name = "content", columnDefinition = "TEXT", nullable = false)
   private String content;
+
+  @Column(name = "isRead", nullable = false)
+  private boolean isRead;
 
   @Column(name = "time", nullable = false)
   private LocalDateTime time;
