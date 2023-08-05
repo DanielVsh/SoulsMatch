@@ -8,6 +8,9 @@ export const profileApi = createApi({
     getNextProfile: builder.query({
       query: () => `/profiles/next`
     }),
+    getLikedProfiles: builder.query({
+      query: (arg) => `/profiles/liked`
+    }),
     getProfile: builder.query({
       query: () => `/profiles`
     }),
@@ -35,6 +38,7 @@ export const profileApi = createApi({
 
 export const {
   useGetProfileQuery,
+  useGetLikedProfilesQuery,
   useGetNextProfileQuery,
   useDislikeProfileMutation,
   useLikeProfileMutation,

@@ -6,6 +6,7 @@ import profileReducer from "../service/profileSlice";
 import storage from 'redux-persist/lib/storage';
 import {persistReducer, persistStore} from 'redux-persist';
 import thunk from 'redux-thunk';
+import {chatApi} from "../service/chatApi";
 
 const persistConfig = {
   key: 'root',
@@ -14,6 +15,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   [profileApi.reducerPath]: profileApi.reducer,
+  [chatApi.reducerPath]: chatApi.reducer,
   authReducer,
   profileReducer,
 })
@@ -24,6 +26,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: [thunk].concat(
     profileApi.middleware,
+    chatApi.middleware,
   )
 })
 
