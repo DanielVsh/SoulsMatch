@@ -9,6 +9,9 @@ import {MatchPage} from "./component/MatchPage";
 import {useSelector} from "react-redux";
 import {AuthenticatedRoute} from "./component/utils/auth/AuthenticatedRoute";
 import {PrivateRoute} from "./component/utils/auth/PrivateRoute";
+import {ChatsPage} from "./component/chat/ChatsPage";
+import WebSocketChatPage from "./component/chat/WebSocketChatPage";
+import {LikedProfilePage} from "./component/LikedProfilePage";
 
 function App() {
 
@@ -16,11 +19,13 @@ function App() {
 
   return (
     <>
-      <div className={"h-full grid grid-rows-[15%,85%]"}>
-        <div>
-          {isAuthenticated && <NavBar/>}
+      <div className="app-wrapper">
+        <div className={"navbar-wrapper"}>
+          {isAuthenticated
+            && <NavBar/>
+          }
         </div>
-        <div className={"px-4"}>
+        <div className={"content-wrapper px-4"}>
           <Routes>
             <Route path={""} element={<MainPage/>}/>
             <Route element={<AuthenticatedRoute isAuthenticated={isAuthenticated}/>}>
@@ -30,6 +35,9 @@ function App() {
             <Route element={<PrivateRoute isAuthenticated={isAuthenticated}/>}>
               <Route path={"match"} element={<MatchPage/>}/>
               <Route path={"profile/create"} element={<CreateProfilePage/>}/>
+              <Route path={"chat"} element={<ChatsPage/>}/>
+              <Route path={"chat/:id"} element={<WebSocketChatPage/>}/>
+              <Route path={"likes"} element={<LikedProfilePage />} />
             </Route>
           </Routes>
         </div>

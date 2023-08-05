@@ -22,6 +22,8 @@ export const LoginPage = () => {
       setTimeout(() => {
         navigate("/match", {replace: true});
       }, 100);
+    }).catch(reason => {
+      alert(reason.response.data.message)
     })
   }
 

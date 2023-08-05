@@ -1,22 +1,45 @@
 import {useState} from "react";
-import {useCreateProfileMutation, useGetProfileQuery} from "../service/profileApi";
+import {useCreateProfileMutation} from "../service/profileApi";
+import {City} from "country-state-city";
+import {useNavigate} from "react-router-dom";
 
 export const CreateProfilePage = () => {
-  const [description, setDescription] = useState('sfsdfsd');
-  const [photos, setPhotos] = useState(['f']);
-  const [preferredGenders, setPreferredGenders] = useState(['MALE']);
+  const navigate = useNavigate()
+
+  const [description, setDescription] = useState('');
+  const [photos, setPhotos] = useState([]);
+  const [preferredGenders, setPreferredGenders] = useState(['']);
+
+  const [country, setCountry] = useState(null);
+  const [city, setCity] = useState([]);
+
+  const [profile, setProfile] = useState(null);
 
   const [createProfile] = useCreateProfileMutation()
 
-  const {data: duplo} = useGetProfileQuery()
-
-  console.log(duplo && duplo)
   const genders = ['MALE', 'FEMALE'];
 
-  const handleCreateProfile = async (data = {
-    description, photos, preferredGenders
-  }) => {
-    await createProfile(data)
+  const handleCreateProfile = async (event) => {
+    event.preventDefault()
+    const citiesOfCountryElement = City.getCitiesOfCountry("UA")[25];
+    citiesOfCountryElement && setCity(citiesOfCountryElement)
+    if (!photos || !city || !preferredGenders || !description) {
+      throw new Error("Error");
+    }
+    const formData = new FormData();
+    photos.forEach((file, index) => {
+      formData.append(`photos[${index}].photo`, file)
+      formData.append(`photos[${index}].action`, `CREATE`)
+    });
+
+    formData.append("preferredGenders", preferredGenders);
+    formData.append("description", description);
+
+
+    formData.append("location.name", city.name);
+    formData.append("location.latitude", parseFloat(city.latitude));
+    formData.append("location.longitude", parseFloat(city.longitude));
+    await createProfile(formData).then(() => navigate("/match", {replace: true}))
   }
 
   const handleGenderSelect = (event) => {
@@ -29,6 +52,27 @@ export const CreateProfilePage = () => {
   const removeGender = (gender) => {
     setPreferredGenders(preferredGenders.filter((selectedGender) => selectedGender !== gender));
   };
+
+  const renderImagePreviews = () => {
+    return photos.map((file, index) => (
+      <div className={``}>
+        <img
+          key={index}
+          src={URL.createObjectURL(file)}
+          alt={`Preview ${index}`}
+          style={{width: '100px', height: '100px', objectFit: 'cover', margin: '5px'}}
+        />
+      </div>
+    ));
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFiles = event.target.files;
+    const fileArray = Array.from(selectedFiles);
+
+    setPhotos(fileArray);
+  };
+
 
   return (
     <>
@@ -50,9 +94,13 @@ export const CreateProfilePage = () => {
                                                                       key={gender}>{gender}, </span>)}
           </div>
         </div>
-        <input value={photos} onChange={(event) => setPhotos(event.target.value)}/>
+        {renderImagePreviews()}
+        <input type="file"
+               accept="image/*"
+               multiple
+               onChange={handleFileChange}/>
       </form>
-      <button onClick={() => handleCreateProfile({photos, description, preferredGenders})}>gogogo</button>
+      <button onClick={handleCreateProfile}>gogogo</button>
     </>
   )
 }

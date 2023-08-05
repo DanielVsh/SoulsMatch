@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useDispatch} from "react-redux";
 import {setTokens} from "../service/authSlice";
 import axios from "axios";
@@ -28,17 +28,13 @@ export const RegistrationPage = () => {
     {value: "FEMALE", label: "Female"},
   ];
 
-  let birthDate;
-  const handleRegistration = async (e, data = {
-    username,
-    password,
-    firstName,
-    lastName,
-    birthDate,
-    gender
-  }) => {
-    e.preventDefault()
-    await axios.post(`${soulsmatch}/api/v1/auth/register`, data).then(response => {
+  let birthDate = useMemo(() => `${birthYear}-${birthMonth}-${birthDay}`
+    , [birthYear, birthMonth, birthDay]);
+  const handleRegistration = async (event) => {
+    event.preventDefault()
+    await axios.post(`${soulsmatch}/api/v1/auth/register`, {
+      username, password, firstName, lastName, birthDate, gender
+    }).then(response => {
       dispatch(setTokens(response?.data))
       setTimeout(() => {
         navigate("/profile/create", {replace: true});
@@ -324,14 +320,7 @@ export const RegistrationPage = () => {
                   <button
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-600 hover:shadow-2xl transition hover:shadow-red-700  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    onClick={(e) => handleRegistration(e, {
-                      username,
-                      password,
-                      firstName,
-                      lastName,
-                      birthDate: `${birthDay}-${birthMonth}-${birthYear}`,
-                      gender
-                    })}
+                    onClick={handleRegistration}
                   >
                     Register
                   </button>
