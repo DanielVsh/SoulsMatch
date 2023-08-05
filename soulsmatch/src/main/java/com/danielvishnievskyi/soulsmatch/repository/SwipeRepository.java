@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SwipeRepository extends JpaRepository<Swipe, Long> {
   Optional<Swipe> findBySoulId(Long soulId);
-  Optional<Swipe> findBySoulEmail(String username);
+  Optional<Swipe> findBySoulUsername(String username);
 }

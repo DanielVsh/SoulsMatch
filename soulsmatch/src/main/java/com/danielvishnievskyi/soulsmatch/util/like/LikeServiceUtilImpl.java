@@ -8,7 +8,7 @@ import com.danielvishnievskyi.soulsmatch.repository.SoulRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.HashSet;
 
 @Component
 @RequiredArgsConstructor
@@ -20,12 +20,12 @@ public class LikeServiceUtilImpl implements LikeServiceUtil {
 
   @Override
   public Like createIfNotFound(String username) {
-    return likeRepository.findBySoulEmail(username)
+    return likeRepository.findBySoulUsername(username)
       .orElseGet(() -> likeRepository.save(
           new Like(
             null,
-            soulRepository.findByEmail(username).orElseThrow(), //TODO: custom exception
-            Set.of()
+            soulRepository.findByUsername(username).orElseThrow(), //TODO: custom exception
+            new HashSet<>()
           )
         ));
   }

@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface ProfileRepository extends JpaRepository<Profile, Long>, JpaSpecificationExecutor<Profile> {
   Optional<Profile> findBySoulId(Long soulId);
 
-  Optional<Profile> findBySoulEmail(String username);
+  Optional<Profile> findBySoulUsername(String username);
 }

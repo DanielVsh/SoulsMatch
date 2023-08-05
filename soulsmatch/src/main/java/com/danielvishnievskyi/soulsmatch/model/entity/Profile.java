@@ -31,7 +31,6 @@ public class Profile {
 
   @OneToMany(fetch = EAGER)
   @CollectionTable(name = "photo_profile", joinColumns = @JoinColumn(name = "profile_id"))
-  @ToString.Exclude
   private List<Photo> photos;
 
   @ManyToOne(fetch = EAGER)

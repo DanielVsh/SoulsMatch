@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
-  Optional<Like> findBySoulEmail(String username);
+  Optional<Like> findBySoulUsername(String username);
 }

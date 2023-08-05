@@ -33,10 +33,9 @@ public class SecurityConfig {
       .csrf(AbstractHttpConfigurer::disable)
       .cors(Customizer.withDefaults())
       .authorizeHttpRequests(authManager -> authManager
-        .requestMatchers("/api/v1/auth/**")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
+        .requestMatchers("/api/v1/auth/**").permitAll()
+        .requestMatchers("/ws/**").permitAll()
+        .anyRequest().authenticated()
       ).sessionManagement(
         managementConfigurer -> managementConfigurer
           .sessionCreationPolicy(STATELESS)

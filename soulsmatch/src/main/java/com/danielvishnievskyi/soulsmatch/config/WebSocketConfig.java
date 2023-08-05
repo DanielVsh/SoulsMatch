@@ -1,4 +1,4 @@
-package com.danielvishnievskyi.soulsmatch.websocket.config;
+package com.danielvishnievskyi.soulsmatch.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

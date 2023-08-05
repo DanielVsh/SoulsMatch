@@ -30,7 +30,7 @@ public class Soul implements UserDetails {
   private Long id;
 
   @Column(name = "username", unique = true, nullable = false)
-  private String email;
+  private String username;
 
   @JsonIgnore
   @Column(name = "password", nullable = false)
@@ -75,7 +75,7 @@ public class Soul implements UserDetails {
 
   @Override
   public String getUsername() {
-    return email;
+    return username;
   }
 
   @Override

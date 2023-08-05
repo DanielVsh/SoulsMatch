@@ -1,8 +1,13 @@
 package com.danielvishnievskyi.soulsmatch.model.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "photo")
@@ -13,10 +18,10 @@ import lombok.*;
 @NoArgsConstructor
 public class Photo {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
-  private Long id;
+  private UUID id;
 
-  @Column(name = "url", nullable = false, unique = true)
-  private String url;
+  private String key;
+
+  private String bucket;
 }

@@ -17,7 +17,7 @@ public class LikeSpecification {
       Join<Like, Soul> soulJoin = likedProfilesJoin.join("soul");
       Join<Profile, Soul> soulProfileJoin = subqueryRoot.join("soul");
 
-      Predicate usernamePredicate = criteriaBuilder.equal(soulJoin.get("email"), username);
+      Predicate usernamePredicate = criteriaBuilder.equal(soulJoin.get("username"), username);
 
       return criteriaBuilder.and(usernamePredicate, criteriaBuilder.equal(soulProfileJoin, root.get("soul")));
     };
