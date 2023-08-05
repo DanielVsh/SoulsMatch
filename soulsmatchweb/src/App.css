@@ -1,0 +1,21 @@
+.app-wrapper {
+    display: grid;
+
+    grid-template-areas:
+          "navbar" "content";
+
+    height: 100%;
+    grid-auto-rows: auto 1fr;
+}
+
+.navbar-wrapper {
+    grid-area: navbar;
+}
+
+.content-wrapper {
+    grid-area: content;
+}
+
+.photo-style {
+    height: 100vh;
+}
