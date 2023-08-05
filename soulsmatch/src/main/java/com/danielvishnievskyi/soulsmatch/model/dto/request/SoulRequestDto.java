@@ -2,8 +2,6 @@ package com.danielvishnievskyi.soulsmatch.model.dto.request;
 
 import com.danielvishnievskyi.soulsmatch.model.enums.Gender;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
