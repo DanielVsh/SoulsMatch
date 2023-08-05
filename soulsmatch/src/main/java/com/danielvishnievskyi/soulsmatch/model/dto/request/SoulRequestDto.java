@@ -1,17 +1,30 @@
 package com.danielvishnievskyi.soulsmatch.model.dto.request;
 
 import com.danielvishnievskyi.soulsmatch.model.enums.Gender;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public record SoulRequestDto(
-  String email,
-  String password,
-  String firstName,
-  String lastName,
-  Gender gender,
-  String birthDate,
-  LocationRequestDto location,
-  List<String> photos
-) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class SoulRequestDto {
+  private String username;
+  @Size(min = 8, message = "Password should have at least 8 symbols") @Null
+  private String password;
+  private String firstName;
+  private String lastName;
+  private Gender gender;
+  private String birthDate;
+  @Valid
+  private LocationRequestDto location;
+  @Valid
+  private List<PhotoRequestDto> photos;
 }

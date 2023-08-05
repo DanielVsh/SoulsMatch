@@ -1,10 +1,15 @@
 package com.danielvishnievskyi.soulsmatch.model.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
-public record ChatResponseDto(
-  Long id,
-  List<SoulResponseDto> participants,
-  List<MessageResponseDto> messages
-) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ChatResponseDto {
+  private Long id;
+  private List<SoulResponseDto> participants;
 }
