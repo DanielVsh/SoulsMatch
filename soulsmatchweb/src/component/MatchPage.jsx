@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {useDislikeProfileMutation, useGetNextProfileQuery, useLikeProfileMutation} from "../service/profileApi";
 import {useDispatch, useSelector} from "react-redux";
 import {clearProfileReducer, setProfileNumber} from "../service/profileSlice";
+import {Gallery} from "./utils/Gallery";
 
 export const MatchPage = () => {
   const dispatch = useDispatch()
@@ -9,34 +10,46 @@ export const MatchPage = () => {
   const profileNumberRedux = useSelector(state => state.profileReducer.match.profileNumber)
 
   const [profile, setProfile] = useState(null);
+  const [profiles, setProfiles] = useState([]);
 
-  const {data: getProfiles, isLoading, isFetching, refetch} = useGetNextProfileQuery()
+  const {data: getProfiles, isLoading, isFetching, refetch, isError} = useGetNextProfileQuery()
+
   const [dislikeProfile] = useDislikeProfileMutation()
   const [likeProfile] = useLikeProfileMutation()
 
   useEffect(() => {
     if (getProfiles) {
-      setProfile(getProfiles[profileNumberRedux])
+      setProfiles(getProfiles?.content)
     }
-  }, [getProfiles, profileNumberRedux])
+  }, [getProfiles])
 
   useEffect(() => {
-    if (profileNumberRedux >= 10) {
+    if (profiles) {
+      setProfile(profiles[profileNumberRedux])
+    }
+  }, [profileNumberRedux, profiles])
+
+  useEffect(() => {
+    if (profileNumberRedux >= profiles?.length) {
       dispatch(clearProfileReducer());
       refetch()
     }
-  }, [profileNumberRedux, dispatch, getProfiles, refetch]);
+  }, [profileNumberRedux]);
 
-  const handleDislike = (id) => {
-    dislikeProfile(id).then(() => {
+  const handleDislike = async () => {
+    await dislikeProfile(profile.id).then((response) => {
       dispatch(setProfileNumber(profileNumberRedux + 1))
     })
   }
 
-  const handleLike = (id) => {
-    likeProfile(id).then(() => {
+  const handleLike = async () => {
+    await likeProfile(profile.id).then((response) => {
       dispatch(setProfileNumber(profileNumberRedux + 1))
     })
+  }
+
+  if (isError) {
+    return "Something went wrong..."
   }
 
   if (isLoading || !profile || isFetching) {
@@ -45,19 +58,37 @@ export const MatchPage = () => {
 
   return (
     <>
+
       <div>
-        <img src={"https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fimages6.fanpop.com%2Fimage%2Fphotos%2F33200000%2FSpongebob-spongebob-squarepants-33210742-2254-2451.jpg&f=1&nofb=1&ipt=8f28f26b5c167a258b631044c52b21025ea304f42a2f8c22f2f27c1ffb89b2a9&ipo=images"}
-             alt={"acc"}
-             style={{width: "300px", height: "300px"}}/>
-        {profile?.soul?.firstName} {profile?.soul?.lastName}
+        <div
+          className="fixed left-0 w-screen h-screen bg-gradient-to-tr from-red-700 via-black to-transparent"
+          style={{zIndex: -2}}
+        />
+        <div
+          className="fixed right-0 w-screen h-screen bg-gradient-to-bl from-red-700 via-black to-transparent"
+          style={{zIndex: -2}}
+        />
       </div>
-      <div>
-        {profile?.description}
+
+      <div className={`flex flex-1 flex-col justify-center`}>
+        <div className={`sm:mx-auto sm:w-full sm:max-w-sm`}>
+          <div className={`absolute left-1/3`}>
+            <Gallery photos={profile?.photos}/>
+            <div className={`absolute p-2 rounded-md bottom-20 ml-4`}>
+              <p className={`text-center font-bold text-3xl capitalize text-white`}>
+                {profile?.soul?.firstName} {profile?.soul?.age}
+              </p>
+              <p className={`text-white font-bold`}>
+                {profile?.location?.name}
+              </p>
+            </div>
+            <div className={`absolute bottom-10 flex justify-between space-x-9 lg:px-8`}>
+              <div className={"bg-white"} onClick={handleLike}>Like button</div>
+              <div className={"bg-white"} onClick={handleDislike}>Dislike button</div>
+            </div>
+          </div>
+        </div>
       </div>
-      {profile?.soul?.location?.city?.name} {profile?.soul?.location?.country?.name}
-      <button onClick={() => handleLike(profile?.id)}>Like</button>
-      <button onClick={() => handleDislike(profile?.id)}>Dislike</button>
-      {profileNumberRedux}
     </>
   )
 }
