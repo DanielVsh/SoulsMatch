@@ -19,9 +19,12 @@ public class ProfileSpecification {
       Root<Swipe> subqueryRoot = subquery.from(Swipe.class);
       Join<Swipe, Profile> swipedProfilesJoin = subqueryRoot.join("swipedProfiles");
       subquery.select(swipedProfilesJoin.get("id"))
-        .where(criteriaBuilder.equal(subqueryRoot.get("soul").get("email"), username));
+        .where(criteriaBuilder.equal(subqueryRoot.get("soul").get("username"), username));
 
-      return criteriaBuilder.not(root.get("id").in(subquery));
+      return criteriaBuilder.and(
+        criteriaBuilder.not(root.get("id").in(subquery)),
+        criteriaBuilder.notEqual(root.get("soul").get("username"), username)
+      );
     };
   }
 

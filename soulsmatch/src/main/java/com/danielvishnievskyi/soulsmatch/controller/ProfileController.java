@@ -1,18 +1,19 @@
 package com.danielvishnievskyi.soulsmatch.controller;
 
-import com.danielvishnievskyi.soulsmatch.mapper.profile.ProfileMapperServiceImpl;
 import com.danielvishnievskyi.soulsmatch.model.dto.request.ProfileRequestDto;
 import com.danielvishnievskyi.soulsmatch.model.dto.response.ProfileResponseDto;
-import com.danielvishnievskyi.soulsmatch.repository.ProfileRepository;
+import com.danielvishnievskyi.soulsmatch.model.entity.Soul;
 import com.danielvishnievskyi.soulsmatch.service.profile.ProfileService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/profiles")
@@ -21,44 +22,54 @@ import java.security.Principal;
 public class ProfileController {
 
   private final ProfileService profileService;
-  private final ProfileRepository profileRepository;
-  private final ProfileMapperServiceImpl profileMapperService;
 
   @GetMapping("/next")
-  public ResponseEntity<Page<ProfileResponseDto>> getNextProfiles(Principal principal) {
-    return ResponseEntity.ok(profileService.getNextProfiles(principal.getName()));
+  public ResponseEntity<Page<ProfileResponseDto>> getNextProfiles(
+    @AuthenticationPrincipal Soul soul,
+    Pageable pageable
+  ) {
+    return ResponseEntity.ok(profileService.getNextProfiles(soul.getUsername(), pageable));
   }
 
   @GetMapping()
-  public ResponseEntity<ProfileResponseDto> getProfile(Principal principal) {
-    return ResponseEntity.ok(profileMapperService.entityToResponseDto(profileRepository.findBySoulEmail(principal.getName()).orElseThrow()));
+  public ResponseEntity<ProfileResponseDto> getProfile(@AuthenticationPrincipal Soul soul) {
+    return ResponseEntity.ok(profileService.getProfileByUsername(soul.getUsername()));
   }
 
   @GetMapping("/liked")
-  public ResponseEntity<Page<ProfileResponseDto>> getLikedProfiles(Principal principal) {
-    return ResponseEntity.ok(profileService.getRequestedLikesProfiles(principal.getName(), PageRequest.of(0, 10)));
+  public ResponseEntity<Page<ProfileResponseDto>> getLikedProfiles(
+    @AuthenticationPrincipal Soul soul,
+    Pageable pageable
+  ) {
+    return ResponseEntity.ok(profileService.getRequestedLikesProfiles(soul.getUsername(), pageable));
   }
 
   @PatchMapping("/{profileId}/dislike")
   public ResponseEntity<Void> dislikeProfile(
     @PathVariable(name = "profileId") Long targetId,
-    Principal principal
+    @AuthenticationPrincipal Soul soul
   ) {
-    profileService.dislikeProfile(principal.getName(), targetId);
+    profileService.dislikeProfile(soul.getUsername(), targetId);
     return ResponseEntity.ok().build();
   }
 
   @PatchMapping("/{profileId}/like")
   public ResponseEntity<Void> likeProfile(
     @PathVariable(name = "profileId") Long targetId,
-    Principal principal
+    @AuthenticationPrincipal Soul soul
   ) {
-    profileService.likeProfile(principal.getName(), targetId);
+    profileService.likeProfile(soul.getUsername(), targetId);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping()
-  public ResponseEntity<ProfileResponseDto> createProfile(@RequestBody ProfileRequestDto profileRequestDto) {
-    return ResponseEntity.ok(profileService.createEntity(profileRequestDto));
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<String> createProfile(
+    @ModelAttribute @Valid ProfileRequestDto profileRequestDto,
+    @AuthenticationPrincipal Soul soul
+  ) {
+    profileService.createProfile(profileRequestDto, soul);
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body("Profile successfully created");
   }
 }
