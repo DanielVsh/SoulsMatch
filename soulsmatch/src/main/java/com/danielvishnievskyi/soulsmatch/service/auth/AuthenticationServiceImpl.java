@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.util.StringUtils.capitalize;
 
 @Service
 @RequiredArgsConstructor
@@ -38,15 +39,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public AuthenticationResponseDto register(RegisterRequestDto requestDto) {
     soulRepository.findByUsername(requestDto.getUsername())
-      .ifPresent(soul -> {throw new SoulAlreadyExistsException("User with provided username already exists: %s"
-        .formatted(requestDto.getUsername()));
+      .ifPresent(soul -> {
+        throw new SoulAlreadyExistsException("User with provided username already exists: %s"
+          .formatted(requestDto.getUsername()));
       });
 
     Soul soul = Soul.builder()
-      .username(requestDto.getUsername())
+      .username(requestDto.getUsername().toLowerCase())
       .password(passwordEncoder.encode(requestDto.getPassword()))
-      .firstName(requestDto.getFirstName())
-      .lastName(requestDto.getLastName())
+      .firstName(capitalize(requestDto.getFirstName().toLowerCase()))
+      .lastName(capitalize(requestDto.getLastName().toLowerCase()))
       .birthDate(LocalDate.parse(requestDto.getBirthDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")))
       .gender(requestDto.getGender())
       .roles(List.of(Role.USER))

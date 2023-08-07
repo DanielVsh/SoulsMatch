@@ -11,6 +11,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.UUID;
+
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
@@ -35,7 +37,7 @@ public abstract class ChatMapperServiceImpl implements ChatMapperService {
   public abstract void updateEntityByRequestDto(ChatRequestDto chatRequestDto, @MappingTarget Chat chat);
 
   @Override
-  public Chat mapLongToChat(Long id) {
+  public Chat mapIdToChat(UUID id) {
     return chatRepository.findById(id)
       .orElseThrow();//TODO: custom exception
   }

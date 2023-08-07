@@ -5,11 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatResponseDto {
-  private Long id;
+  private UUID id;
   private List<SoulResponseDto> participants;
 }
