@@ -1,6 +1,7 @@
 package com.danielvishnievskyi.soulsmatch.model.dto.request;
 
 import com.danielvishnievskyi.soulsmatch.model.enums.Gender;
+import com.danielvishnievskyi.soulsmatch.validation.annotation.PasswordComplexity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,6 +16,8 @@ public class RegisterRequestDto {
   @NotBlank(message = "Username should not be null")
   private String username;
   @NotBlank(message = "Password should not be null")
+  @Size(min = 8, max = 32, message = "Password length must be 8 to 32")
+  @PasswordComplexity
   private String password;
   @NotBlank(message = "Firstname should not be null")
   private String firstName;
