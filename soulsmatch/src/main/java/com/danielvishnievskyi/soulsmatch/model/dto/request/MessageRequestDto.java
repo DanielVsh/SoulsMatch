@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageRequestDto {
   @NotNull(message = "Chat is required")
-  private Long chat;
+  private UUID chat;
   @NotBlank(message = "Username is required")
   private String username;
   @NotBlank(message = "Content should not be empty")

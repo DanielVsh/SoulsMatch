@@ -18,8 +18,8 @@ import java.util.UUID;
 public class Message {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "uuid", nullable = false)
-  private UUID uuid;
+  @Column(name = "id", nullable = false)
+  private UUID id;
 
   @ManyToOne
   @JoinColumn(name = "chat_id", nullable = false)
